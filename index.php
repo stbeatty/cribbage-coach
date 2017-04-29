@@ -1,8 +1,6 @@
 <?php
 
-require_once('class.card.php');
 require_once('class.deal.php');
-require_once('class.potentialPlay.php');
 
 // Tests
 // $play = new PotentialPlay();
@@ -48,7 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <tr>
                     <th>Hold</th>
                     <th>Discard</th>
-                    <th>Average Hand</th>
+                    <th>Average Hand (Self)</th>
+                    <th>Average Hand (Opponent)</th>
                 </tr>
             </thead>
             <tbody>
@@ -56,7 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <tr>
                         <td><?= $play->getHolds() ?></td>
                         <td><?= $play->getDiscards() ?></td>
-                        <td><?= $play->getAverageHand() ?></td>
+                        <td><?= $play->getExpectedAverageSelf() ?></td>
+                        <td><?= $play->getExpectedAverageOpponent() ?></td>
                     </tr>
                 <?php endforeach; ?>
             <tbody>

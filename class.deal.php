@@ -1,5 +1,12 @@
 <?php
 
+require_once('class.card.php');
+require_once('class.potentialPlay.php');
+
+
+/**
+ * A Deal is the full amount of cards received from the dealer.
+ */
 class Deal {
     
     private $total_num_cards = 6;
@@ -28,7 +35,7 @@ class Deal {
                 //var_dump($play->getHandValue());
             }
         }
-        usort($this->possible_plays, array($this, 'sortPlaysByAverageHand'));
+        usort($this->possible_plays, array($this, 'sortPlaysByExpectedAverage'));
     }
 
     private function accept($dealt) {
@@ -41,8 +48,8 @@ class Deal {
         }
     }
 
-    private function sortPlaysByAverageHand($a, $b) {
-        return $a->getAverageHand() < $b->getAverageHand();
+    private function sortPlaysByExpectedAverage($a, $b) {
+        return $a->getExpectedAverageSelf() < $b->getExpectedAverageSelf();
     }
 
 }

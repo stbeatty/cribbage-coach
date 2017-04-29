@@ -1,4 +1,9 @@
-<?php 
+<?php
+
+require_once('class.card.php');
+require_once('class.deal.php');
+require_once('class.discard.php');
+
 
 /**
  * A potential play is a separation of 6 dealt cards in 2-person cribbage
@@ -10,6 +15,9 @@ class PotentialPlay {
     private $holds = array();
     private $hand = array();
     private $averageHand;
+    private $discard;
+    private $expectedAverageSelf;
+    private $expectedAverageOpponent;
 
     public function discard($card) {
         $this->discards[] = $card;
@@ -29,13 +37,40 @@ class PotentialPlay {
         return join(", ", $this->holds);
     }
 
-    public function getAverageHand() {
+    public function getExpectedAverageSelf() {
+        if (!$this->expectedAverageSelf) {
+            $this->getExpectedAverage();
+        }
+        return $this->expectedAverageSelf;
+    }
+
+    public function getExpectedAverageOpponent() {
+        if (!$this->expectedAverageOpponent) {
+            $this->getExpectedAverage();
+        }
+        return $this->expectedAverageOpponent;
+    }
+
+    public function getExpectedAverage() {
+        if (!$this->expectedAverageSelf || !$this->expectedAverageOpponent) {
+            $this->setAverageHand();
+            $this->lookupAverageCribs();
+            $this->expectedAverageSelf = $this->averageHand + $this->discard->averageCribSelf;
+            $this->expectedAverageOpponent = $this->averageHand + $this->discard->averageCribOpponent;
+        }
+    }
+
+    private function setAverageHand() {
         if (!$this->averageHand) {
             $this->averageHand = $this->calculateAverageHand();
         }
-        return $this->averageHand;
     }
 
+    private function lookupAverageCribs() {
+        if (!$this->discard) {
+            $this->discard = new Discard($this->discards);
+        }
+    }
 
     private function calculateAverageHand() {
         $total = 0;
