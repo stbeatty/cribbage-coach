@@ -1,0 +1,13 @@
+{
+    "name": "sean/crib",
+    "description": "A program to help determine the best cribbage discard move",
+    "require": {
+        "phpunit/phpunit": "^6.1"
+    },
+    "authors": [
+        {
+            "name": "Sean Beatty",
+            "email": "sean@beattywebs.com"
+        }
+    ]
+}

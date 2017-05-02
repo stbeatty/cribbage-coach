@@ -18,6 +18,7 @@ class PotentialPlay {
     private $discard;
     private $expectedAverageSelf;
     private $expectedAverageOpponent;
+    public $hands = array();
 
     public function discard($card) {
         $this->discards[] = $card;
@@ -86,9 +87,21 @@ class PotentialPlay {
         $hand = $this->holds;
         $hand[] = $starter;
         $frequency = $this->getCardFrequency($starter);
-        $score += $this->countFifteens($hand);
-        $score += $this->countPairs($hand);
-        $score += $this->countRuns($hand);
+        $fifteens = $this->countFifteens($hand);
+        $pairs = $this->countPairs($hand);
+        $runs = $this->countRuns($hand);
+        $score += $fifteens;
+        $score += $pairs;
+        $score += $runs;
+
+        $this->hands[] = array(
+            'starter' => $starter,
+            'fifteens' => $fifteens,
+            'frequency' => $frequency,
+            'pairs' => $pairs,
+            'runs' => $runs,
+            'score' => $score * $frequency
+        );
         // var_dump(array(
         //     'hand' => join(", ", $hand),
         //     'fifteens' => $this->countFifteens($hand),

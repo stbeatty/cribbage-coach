@@ -2,22 +2,14 @@
 
 require_once('class.deal.php');
 
-// Tests
-// $play = new PotentialPlay();
-// $play->discard(2);
-// $play->discard('J');
-// $play->keep(array(5,3,4,5));
-
-// assert(6 == $play->countRuns(array(5,3,4,5,'A')));
-// assert(8 == $play->countRuns(array(2,3,4,5,5)));
-// assert(12 == $play->countRuns(array(5,3,4,5,3)));
-// assert(6 == $play->countRuns(array(5,3,4,5,7))); //6
-// var_dump($play->getAverageHand());
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $deal = new Deal($_POST);
     $deal->determinePossiblePlays();
 }
+
+// J-2 16.32
+// 5-5 16.92
+// 4-5 17.96
 
 ?>
 
@@ -46,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <tr>
                     <th>Hold</th>
                     <th>Discard</th>
+                    <th>Hands</th>
                     <th>Average Hand (Self)</th>
                     <th>Average Hand (Opponent)</th>
                 </tr>
@@ -55,6 +48,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <tr>
                         <td><?= $play->getHolds() ?></td>
                         <td><?= $play->getDiscards() ?></td>
+                        <td>
+                            <table class="table table-striped table-condensed">
+                                <thead>
+                                    <tr>
+                                        <td>starter</td>
+                                        <td>fifteens</td>
+                                        <td>pairs</td>
+                                        <td>runs</td>
+                                        <td>frequency</td>
+                                        <td>total</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($play->hands as $hand): ?>
+                                        <tr>
+                                            <td><?= $hand['starter'] ?></td>
+                                            <td><?= $hand['fifteens'] ?></td>
+                                            <td><?= $hand['pairs'] ?></td>
+                                            <td><?= $hand['runs'] ?></td>
+                                            <td><?= $hand['frequency'] ?></td>
+                                            <td><?= $hand['score'] ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </td>
                         <td><?= $play->getExpectedAverageSelf() ?></td>
                         <td><?= $play->getExpectedAverageOpponent() ?></td>
                     </tr>
