@@ -179,7 +179,7 @@ class PotentialPlay {
         }
     }
 
-    private function countPairs($hand) {
+    public function countPairs($hand) {
         $points = 0;
         $frequencies = array_count_values($hand);
         foreach ($frequencies as $card => $frequency) {
@@ -192,7 +192,7 @@ class PotentialPlay {
 
     // This might be able to be improved
     // http://stackoverflow.com/questions/12807855/algorithm-extract-subset-based-on-property-sum?noredirect=1&lq=1
-    private function countFifteens($hand) {
+    public function countFifteens($hand) {
         $limit = 15;
         $values = array();
         $points = 0;
