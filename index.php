@@ -1,6 +1,6 @@
 <?php
 
-require_once('class.deal.php');
+require_once('src/Deal.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $deal = new Deal($_POST);

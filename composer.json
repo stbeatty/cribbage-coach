@@ -9,5 +9,8 @@
             "name": "Sean Beatty",
             "email": "sean@beattywebs.com"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-0": { "": "src/" }
+    }
 }

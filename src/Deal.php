@@ -1,7 +1,7 @@
 <?php
 
-require_once('class.card.php');
-require_once('class.potentialPlay.php');
+require_once('Card.php');
+require_once('PotentialPlay.php');
 
 
 /**

@@ -1,8 +1,8 @@
 <?php
 
-require_once('class.card.php');
-require_once('class.deal.php');
-require_once('class.discard.php');
+require_once('Card.php');
+require_once('Deal.php');
+require_once('Discard.php');
 
 
 /**
