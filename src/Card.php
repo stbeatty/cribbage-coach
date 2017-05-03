@@ -52,6 +52,10 @@ class Card {
         $this->value = Card::$VALUES[$faceValue];
     }
 
+    public function __toString() {
+        return $this->faceValue . $this->suit;
+    }
+
     public function getFaceValue() {
         return $this->faceValue;
     }

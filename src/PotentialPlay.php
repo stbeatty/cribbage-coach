@@ -78,9 +78,8 @@ class PotentialPlay {
     public function calculateAverageHand() {
         $total = 0;
         foreach (Card::$VALUES as $starter => $value) {
-            $total += $this->getHandValue($starter);
+            $total += $this->getHandValue(new Card($starter.'C'));
         }
-        // var_dump($total);
         return round($total / 46, 2);
     }
 
@@ -123,20 +122,25 @@ class PotentialPlay {
         $positions = array();
         $keys = array_keys(Card::$VALUES);
         foreach ($hand as $card) {
-            $positions[] = array('position' => array_search($card, $keys), 'used' => false);
+            $positions[] = array('position' => array_search($card->getFaceValue(), $keys), 'used' => false);
         }
         usort($positions, array($this, 'sortPositions'));
         return $positions;
     }
 
     private function splitDuplicates($hand, $positions) {
-        // var_dump($hand);
-        $counts = array_count_values($hand);
+        $counts = array();
+        foreach ($this->hand as $card) {
+            $faceValue = $card->getFaceValue();
+            if (array_key_exists($faceValue, $counts)) {
+                $counts[$faceValue] += 1;
+            } else {
+                $counts[$faceValue] = 1;
+            }
+        }
         $num_copies = 1;
         foreach ($counts as $card => $count) {
-            // var_dump("count $count");
             $num_copies *= $count;
-            // var_dump("num copies $num_copies");
         }
         return array_fill(0, $num_copies, $positions);
     }
@@ -183,7 +187,15 @@ class PotentialPlay {
 
     public function countPairs($hand) {
         $points = 0;
-        $frequencies = array_count_values($hand);
+        $frequencies = array();
+        foreach ($hand as $card) {
+            $value = $card->getValue();
+            if (array_key_exists($value, $frequencies)) {
+                $frequencies[$value] += 1;
+            } else {
+                $frequencies[$value] = 1;
+            }
+        }
         foreach ($frequencies as $card => $frequency) {
             if ($frequency > 1) {
                 $points += (pow($frequency, 2) - $frequency);
@@ -199,7 +211,7 @@ class PotentialPlay {
         $values = array();
         $points = 0;
         foreach ($hand as $card) {
-            $values[] = Card::$VALUES[$card];
+            $values[] = $card->getValue();
         }
         $count = count($values);
         $total = pow(2, $count);
@@ -217,10 +229,18 @@ class PotentialPlay {
         return $points;
     }
 
-    private function getCardFrequency($card) {
-        $counts = array_count_values($this->hand);
-        if (array_key_exists($card, $counts)) {
-            return 4 - $counts[$card];
+    private function getCardFrequency($starter) {
+        $counts = array();
+        foreach ($this->hand as $card) {
+            $faceValue = $card->getFaceValue();
+            if (array_key_exists($faceValue, $counts)) {
+                $counts[$faceValue] += 1;
+            } else {
+                $counts[$faceValue] = 1;
+            }
+        }
+        if (array_key_exists($starter->getValue(), $counts)) {
+            return 4 - $counts[$starter->getValue()];
         }
         return 4;
     }

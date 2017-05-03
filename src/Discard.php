@@ -16,7 +16,7 @@ class Discard {
 
         foreach (Discard::$VALUES as $values) {
             foreach ($cards as $card) {
-                $pos = array_search($card, $values);
+                $pos = array_search($card->getFaceValue(), $values);
                 if ($pos !== false) {
                     unset($values[$pos]);
                 }
