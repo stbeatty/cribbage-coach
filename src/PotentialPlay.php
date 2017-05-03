@@ -189,7 +189,7 @@ class PotentialPlay {
         $points = 0;
         $frequencies = array();
         foreach ($hand as $card) {
-            $value = $card->getValue();
+            $value = $card->getFaceValue();
             if (array_key_exists($value, $frequencies)) {
                 $frequencies[$value] += 1;
             } else {
