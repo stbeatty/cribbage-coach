@@ -77,7 +77,7 @@ class PotentialPlay {
 
     public function calculateAverageHand() {
         $total = 0;
-        foreach (Card::$DECK as $starter => $value) {
+        foreach (Card::$VALUES as $starter => $value) {
             $total += $this->getHandValue($starter);
         }
         // var_dump($total);
@@ -121,7 +121,7 @@ class PotentialPlay {
 
     private function getHandPositions($hand) {
         $positions = array();
-        $keys = array_keys(Card::$DECK);
+        $keys = array_keys(Card::$VALUES);
         foreach ($hand as $card) {
             $positions[] = array('position' => array_search($card, $keys), 'used' => false);
         }
@@ -199,7 +199,7 @@ class PotentialPlay {
         $values = array();
         $points = 0;
         foreach ($hand as $card) {
-            $values[] = Card::$DECK[$card];
+            $values[] = Card::$VALUES[$card];
         }
         $count = count($values);
         $total = pow(2, $count);

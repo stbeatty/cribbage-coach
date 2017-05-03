@@ -9,18 +9,28 @@ require_once('PotentialPlay.php');
  */
 class Deal {
     
-    private $total_num_cards = 6;
-    public $hand = array();
-    public $possible_plays = array();
+    public static $total_num_cards = 6;
+    public $hand = array(); // Array of Card objects
+    public $possible_plays = array(); // Array of PossiblePlay objects
 
     public function __construct($cards) {
-        $this->accept($cards);
+        if (!is_array($cards)) {
+            throw new InvalidArgumentException("Cards supplied are not an array.");
+        }
+        for ($i=0; $i < Deal::$total_num_cards; $i++) {
+            $key = "card$i";
+            if (!array_key_exists($key, $cards)) {
+                throw new Exception("Not enough cards dealt. Currently at [$key].");
+            }
+            $card = $cards["card$i"];
+            $this->hand[] = new Card($card);
+        }
     }
 
     public function determinePossiblePlays() {
         $full_pool = $this->hand;
         $temphand = $this->hand;
-        for ($i = $this->total_num_cards - 1; $i >= 0; $i--) {
+        for ($i = Deal::$total_num_cards - 1; $i >= 0; $i--) {
             $discard_one = array_pop($temphand);
             for ($j = 0; $j < sizeof($temphand); $j++) {
                 $remaining_hand = $full_pool;
@@ -35,16 +45,6 @@ class Deal {
             }
         }
         usort($this->possible_plays, array($this, 'sortPlaysByExpectedAverage'));
-    }
-
-    private function accept($dealt) {
-        for ($i = 1; $i <= $this->total_num_cards; $i++) {
-            $card = $dealt["card$i"];
-            if (!in_array($card, array_keys(Card::$DECK))) {
-                throw new Exception("Card #$i value [$card] not valid.");
-            }
-            $this->hand[] = $card;
-        }
     }
 
     private function sortPlaysByExpectedAverage($a, $b) {

@@ -7,10 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $deal->determinePossiblePlays();
 }
 
-// J-2 16.32
-// 5-5 16.92
-// 4-5 17.96
-
 ?>
 
 <!doctype html>
@@ -23,12 +19,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="container">
     <h1>Enter card values</h1>
     <form method="post" class="form-inline">
-        <input type="text" name="card1" class="span1" value="<?= isset($_POST['card1']) ? $_POST['card1'] : '' ?>" />
-        <input type="text" name="card2" class="span1" value="<?= isset($_POST['card2']) ? $_POST['card2'] : '' ?>" />
-        <input type="text" name="card3" class="span1" value="<?= isset($_POST['card3']) ? $_POST['card3'] : '' ?>" />
-        <input type="text" name="card4" class="span1" value="<?= isset($_POST['card4']) ? $_POST['card4'] : '' ?>" />
-        <input type="text" name="card5" class="span1" value="<?= isset($_POST['card5']) ? $_POST['card5'] : '' ?>" />
-        <input type="text" name="card6" class="span1" value="<?= isset($_POST['card6']) ? $_POST['card6'] : '' ?>" />
+        <input type="text" name="card1" class="span1" value="<?= isset($_POST['card1']) ? $_POST['card1'] : '2C' ?>" />
+        <input type="text" name="card2" class="span1" value="<?= isset($_POST['card2']) ? $_POST['card2'] : '3C' ?>" />
+        <input type="text" name="card3" class="span1" value="<?= isset($_POST['card3']) ? $_POST['card3'] : '4D' ?>" />
+        <input type="text" name="card4" class="span1" value="<?= isset($_POST['card4']) ? $_POST['card4'] : '5H' ?>" />
+        <input type="text" name="card5" class="span1" value="<?= isset($_POST['card5']) ? $_POST['card5'] : '5C' ?>" />
+        <input type="text" name="card6" class="span1" value="<?= isset($_POST['card6']) ? $_POST['card6'] : 'JC' ?>" />
         <button type="submit" class="btn">Analyze</button>
     </form>
 
