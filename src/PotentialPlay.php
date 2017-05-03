@@ -20,14 +20,16 @@ class PotentialPlay {
     private $expectedAverageOpponent;
     public $hands = array();
 
-    public function discard($card) {
-        $this->discards[] = $card;
-        $this->hand[] = $card;
+    public function discard($cards) {
+        $this->discards = $cards;
+        $this->hand = array_merge($this->hand, $cards);
+        return $this;
     }
 
     public function keep($cards) {
         $this->holds = $cards;
         $this->hand = array_merge($this->hand, $cards);
+        return $this;
     }
 
     public function getDiscards() {
@@ -73,7 +75,7 @@ class PotentialPlay {
         }
     }
 
-    private function calculateAverageHand() {
+    public function calculateAverageHand() {
         $total = 0;
         foreach (Card::$DECK as $starter => $value) {
             $total += $this->getHandValue($starter);

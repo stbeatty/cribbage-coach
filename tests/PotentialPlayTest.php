@@ -3,20 +3,6 @@
 use PHPUnit\Framework\TestCase;
 
 final class PotentialPlayTest extends TestCase {
-    
-    public function testAddToDiscards() {
-        $potentialPlay = new PotentialPlay();
-        $discard = 'J';
-        $this->assertEquals(
-            $potentialPlay->getDiscards(),
-            ''
-        );
-        $potentialPlay->discard($discard);
-        $this->assertEquals(
-            $potentialPlay->getDiscards(),
-            $discard
-        );
-    }
 
     public function testCountFifteens() {
         $p = new PotentialPlay();
@@ -66,5 +52,19 @@ final class PotentialPlayTest extends TestCase {
         $this->assertEquals(3, $p->countRuns(['2','3','4','J','8']));
         $this->assertEquals(3, $p->countRuns(['2','3','4','J','9']));
         $this->assertEquals(3, $p->countRuns(['2','3','4','J','10']));
+    }
+
+    public function testCalculateAverageHand() {
+        $p = new PotentialPlay();
+        $p->discard(['J','2'])->keep(['3','4','5','5']);
+        $this->assertEquals(16.32, $p->calculateAverageHand());
+
+        $p = new PotentialPlay();
+        $p->discard(['5','5'])->keep(['2','3','4','J']);
+        $this->assertEquals(16.92, $p->calculateAverageHand());
+
+        $p = new PotentialPlay();
+        $p->discard(['4','5'])->keep(['2','3','5','J']);
+        $this->assertEquals(17.96, $p->calculateAverageHand());
     }
 }

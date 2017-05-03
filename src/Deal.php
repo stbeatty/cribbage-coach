@@ -28,8 +28,7 @@ class Deal {
                 unset($remaining_hand[$i]);
                 unset($remaining_hand[$j]);
                 $play = new PotentialPlay();
-                $play->discard($discard_one);
-                $play->discard($discard_two);
+                $play->discard(array($discard_one, $discard_two));
                 $play->keep($remaining_hand);
                 $this->possible_plays[] = $play;
                 //var_dump($play->getHandValue());
