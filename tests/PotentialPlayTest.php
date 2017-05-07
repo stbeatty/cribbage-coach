@@ -87,7 +87,7 @@ final class PotentialPlayTest extends TestCase {
         $p = new PotentialPlay();
         $p->discard([ new Card('4D'), new Card('5H')])
           ->keep([new Card('2C'), new Card('3C'), new Card('5C'), new Card('JC')]);
-        $this->assertEquals(17.96, $p->calculateAverageHand());
+        $this->assertEquals(17.96, $p->getExpectedAverageSelf());
     }
 
     private function assertMethod($method, $expectedValue, $cards) {

@@ -80,7 +80,39 @@ class PotentialPlay {
         foreach (Card::$VALUES as $starter => $value) {
             $total += $this->getHandValue(new Card($starter.'N'));
         }
+        $total += $this->checkForHisNobs();
         return round($total / 46, 2);
+    }
+
+    private function checkForHisNobs() {
+        $suits = [];
+        foreach($this->holds as $card) {
+            if ($card->getFaceValue() == 'J') {
+                $suits[$card->getSuit()] = count(Card::$VALUES);
+            }
+        }
+        $points = 0;
+        foreach ($this->getSuitFrequency($suits) as $suit => $count) {
+            $this->hands[] = array(
+                'starter' => "J ($suit)",
+                'fifteens' => null,
+                'frequency' => $count,
+                'pairs' => null,
+                'runs' => null,
+                'score' => 1
+            );
+            $points += $count;
+        }
+        return $points;
+    }
+
+    private function getSuitFrequency($suits) {
+        foreach($this->hand as $card) {
+            if (array_key_exists($card->getSuit(), $suits)) {
+                $suits[$card->getSuit()] -= 1;
+            }
+        }
+        return $suits;
     }
 
     private function getHandValue($starter) {

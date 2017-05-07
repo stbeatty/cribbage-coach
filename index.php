@@ -54,15 +54,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <td><?= $play->getHolds() ?></td>
                         <td><?= $play->getDiscards() ?></td>
                         <td>
-                            <table class="table table-striped table-condensed">
+                            <table class="table table-bordered table-striped table-condensed">
                                 <thead>
                                     <tr>
-                                        <td>starter</td>
-                                        <td>fifteens</td>
-                                        <td>pairs</td>
-                                        <td>runs</td>
-                                        <td>frequency</td>
-                                        <td>total</td>
+                                        <th>starter</th>
+                                        <th>fifteens</th>
+                                        <th>pairs</th>
+                                        <th>runs</th>
+                                        <th>frequency</th>
+                                        <th>total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
