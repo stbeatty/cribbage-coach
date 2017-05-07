@@ -20,6 +20,7 @@ class PotentialPlay {
     private $expectedAverageOpponent;
     public $hands = array();
     private $suitFrequencies = array();
+    private $flushKeepSuit;
 
     public function __construct() {
         foreach (Card::$SUITS as $suit) {
@@ -38,9 +39,18 @@ class PotentialPlay {
 
     public function keep($cards) {
         $this->holds = $cards;
+        $flushInKeep = true;
+        $cards = array_values($cards);
+        $suit = $cards[0]->getSuit();
         foreach ($cards as $card) {
             $this->hand[] = $card;
             $this->suitFrequencies[$card->getSuit()] += 1;
+            if ($card->getSuit() != $suit) {
+                $flushInKeep = false;
+            }
+        }
+        if ($flushInKeep) {
+            $this->flushKeepSuit = $suit;
         }
         return $this;
     }
@@ -93,18 +103,15 @@ class PotentialPlay {
         foreach (Card::$VALUES as $starter => $value) {
             $total += $this->getHandValue(new Card($starter.'N'));
         }
-        $total += $this->countHisNobs();
-        $total += $this->countFlush();
+        $total += $this->countHisNobsProbability();
+        $total += $this->countFlushProbability();
         return round($total / 46, 2);
     }
 
-    private function countFlush() {
-        $holds = array_values($this->holds);
-        $suit = $holds[0]->getSuit();
-        foreach($holds as $card) {
-            if ($card->getSuit() != $suit) {
-                return 0;
-            }
+    private function countFlushProbability() {
+        $suit = $this->flushKeepSuit;
+        if (!$suit) {
+            return 0;
         }
         $frequency = $this->getSuitFrequency($suit);
         $this->hands[] = array(
@@ -118,7 +125,7 @@ class PotentialPlay {
         return $frequency;
     }
 
-    private function countHisNobs() {
+    private function countHisNobsProbability() {
         $points = 0;
         $suits = [];
         foreach($this->holds as $card) {
@@ -154,6 +161,9 @@ class PotentialPlay {
         $score += $fifteens;
         $score += $pairs;
         $score += $runs;
+        if ($this->flushKeepSuit) {
+            $score += count($this->holds);
+        }
 
         $this->hands[] = array(
             'starter' => $starter,

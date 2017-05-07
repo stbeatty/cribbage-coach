@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <tr>
                     <th>Hold</th>
                     <th>Discard</th>
-                    <th>Hands</th>
+                    <?php if (0): ?><th>Hands</th><?php endif; ?>
                     <th>Average Hand (Self)</th>
                     <th>Average Hand (Opponent)</th>
                 </tr>
@@ -53,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <tr>
                         <td><?= $play->getHolds() ?></td>
                         <td><?= $play->getDiscards() ?></td>
+                        <?php if (0): ?>
                         <td>
                             <table class="table table-bordered table-striped table-condensed">
                                 <thead>
@@ -79,6 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </tbody>
                             </table>
                         </td>
+                        <?php endif; ?>
                         <td><?= $play->getExpectedAverageSelf() ?></td>
                         <td><?= $play->getExpectedAverageOpponent() ?></td>
                     </tr>
