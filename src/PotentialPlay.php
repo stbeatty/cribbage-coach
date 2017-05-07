@@ -19,16 +19,29 @@ class PotentialPlay {
     private $expectedAverageSelf;
     private $expectedAverageOpponent;
     public $hands = array();
+    private $suitFrequencies = array();
+
+    public function __construct() {
+        foreach (Card::$SUITS as $suit) {
+            $this->suitFrequencies[$suit] = 0;
+        }
+    }
 
     public function discard($cards) {
         $this->discards = $cards;
-        $this->hand = array_merge($this->hand, $cards);
+        foreach ($cards as $card) {
+            $this->hand[] = $card;
+            $this->suitFrequencies[$card->getSuit()] += 1;
+        }
         return $this;
     }
 
     public function keep($cards) {
         $this->holds = $cards;
-        $this->hand = array_merge($this->hand, $cards);
+        foreach ($cards as $card) {
+            $this->hand[] = $card;
+            $this->suitFrequencies[$card->getSuit()] += 1;
+        }
         return $this;
     }
 
@@ -80,39 +93,54 @@ class PotentialPlay {
         foreach (Card::$VALUES as $starter => $value) {
             $total += $this->getHandValue(new Card($starter.'N'));
         }
-        $total += $this->checkForHisNobs();
+        $total += $this->countHisNobs();
+        $total += $this->countFlush();
         return round($total / 46, 2);
     }
 
-    private function checkForHisNobs() {
+    private function countFlush() {
+        $holds = array_values($this->holds);
+        $suit = $holds[0]->getSuit();
+        foreach($holds as $card) {
+            if ($card->getSuit() != $suit) {
+                return 0;
+            }
+        }
+        $frequency = $this->getSuitFrequency($suit);
+        $this->hands[] = array(
+            'starter' => "flush ($suit)",
+            'fifteens' => null,
+            'frequency' => $frequency,
+            'pairs' => null,
+            'runs' => null,
+            'score' => 1
+        );
+        return $frequency;
+    }
+
+    private function countHisNobs() {
+        $points = 0;
         $suits = [];
         foreach($this->holds as $card) {
             if ($card->getFaceValue() == 'J') {
-                $suits[$card->getSuit()] = count(Card::$VALUES);
+                $suit = $card->getSuit();
+                $frequency = $this->getSuitFrequency($suit);
+                $points += $frequency;
+                $this->hands[] = array(
+                    'starter' => "J ($suit)",
+                    'fifteens' => null,
+                    'frequency' => $frequency,
+                    'pairs' => null,
+                    'runs' => null,
+                    'score' => 1
+                );
             }
-        }
-        $points = 0;
-        foreach ($this->getSuitFrequency($suits) as $suit => $count) {
-            $this->hands[] = array(
-                'starter' => "J ($suit)",
-                'fifteens' => null,
-                'frequency' => $count,
-                'pairs' => null,
-                'runs' => null,
-                'score' => 1
-            );
-            $points += $count;
         }
         return $points;
     }
 
-    private function getSuitFrequency($suits) {
-        foreach($this->hand as $card) {
-            if (array_key_exists($card->getSuit(), $suits)) {
-                $suits[$card->getSuit()] -= 1;
-            }
-        }
-        return $suits;
+    private function getSuitFrequency($suit) {
+        return count(Card::$VALUES) - $this->suitFrequencies[$suit];
     }
 
     private function getHandValue($starter) {
