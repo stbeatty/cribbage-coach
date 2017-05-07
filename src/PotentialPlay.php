@@ -78,7 +78,7 @@ class PotentialPlay {
     public function calculateAverageHand() {
         $total = 0;
         foreach (Card::$VALUES as $starter => $value) {
-            $total += $this->getHandValue(new Card($starter.'C'));
+            $total += $this->getHandValue(new Card($starter.'N'));
         }
         return round($total / 46, 2);
     }
@@ -103,86 +103,66 @@ class PotentialPlay {
             'runs' => $runs,
             'score' => $score * $frequency
         );
-        // var_dump(array(
-        //     'hand' => join(", ", $hand),
-        //     'fifteens' => $this->countFifteens($hand),
-        //     'pairs' => $this->countPairs($hand),
-        //     'runs' => $this->countRuns($hand),
-        //     'frequency' => $frequency,
-        //     'total' => $score
-        // ));
         return $score * $frequency;
-    }
-
-    private static function sortPositions($a, $b) {
-        return $a['position'] > $b['position'];
-    }
-
-    private function getHandPositions($hand) {
-        $positions = array();
-        $keys = array_keys(Card::$VALUES);
-        foreach ($hand as $card) {
-            $positions[] = array('position' => array_search($card->getFaceValue(), $keys), 'used' => false);
-        }
-        usort($positions, array($this, 'sortPositions'));
-        return $positions;
-    }
-
-    private function splitDuplicates($hand, $positions) {
-        $counts = array();
-        foreach ($this->hand as $card) {
-            $faceValue = $card->getFaceValue();
-            if (array_key_exists($faceValue, $counts)) {
-                $counts[$faceValue] += 1;
-            } else {
-                $counts[$faceValue] = 1;
-            }
-        }
-        $num_copies = 1;
-        foreach ($counts as $card => $count) {
-            $num_copies *= $count;
-        }
-        return array_fill(0, $num_copies, $positions);
     }
 
     public function countRuns($hand) {
         $points = 0;
-        $positions = $this->getHandPositions($hand);
-        $allruns = $this->splitDuplicates($hand, $positions);
-        // var_dump($allruns);
-        foreach ($allruns as $run) {
-            $points += $this->collectRuns($run);
-        }
-        // var_dump("total points $points");
+        usort($hand, 'Card::sort');
+        $runs = $this->collectRuns($hand, array());
+        // var_dump($runs);
+        $points = array_sum(array_map("count", $runs));
         return $points;
     }
 
-    private function collectRuns($run) {
-        $streak = 1;
-        $pos = $run;
-        for ($i = sizeof($pos) - 1; $i > 0; --$i) {
-            $thisval = $pos[$i]['position'];
-            $nextval;
-            if (isset($pos[$i-1])) {
-                $nextval = $pos[$i-1]['position'];
-            }
-            // var_dump(array('thisval' => $thisval, 'nextval' => $nextval));
-            if (isset($nextval) && $thisval == $nextval) {
-                continue;
-            } else if (isset($nextval) && $thisval - 1 != $nextval) {
-                if ($streak > 2) {
-                    return $streak;
+    private function collectRuns($hand, $runs) {
+        $hand = array_values($hand);
+        $fullhand = $hand;
+        // var_dump(['START', 'hand' => $hand]);
+        for ($i=count($hand)-1; $i>1; --$i) {
+            $candidate = array($hand[$i]);
+            for ($j=$i; $j>=0; --$j) {
+                $thiscard = $hand[$j];
+                $nextcard;
+                if (isset($hand[$j-1])) {
+                    $nextcard = $hand[$j-1];
+                } else {
+                    // var_dump(['end' => end($candidate), 'thiscard' => $thiscard]);
+                    if (end($candidate)->getIndex() - 1 == $thiscard->getIndex()) {
+                        $candidate[] = $thiscard;
+                    }
+                    $runs = $this->addToRuns($runs, $candidate);
                 }
-            } else if (!$pos[$i]['used']) {
-                $streak ++;
-                $pos[$i]['used'] = true;
-                // var_dump("incrementing $streak");
+                if (isset($nextcard) && $thiscard->getIndex() == $nextcard->getIndex()) {
+                    $handy = $fullhand;
+                    unset($handy[array_search($thiscard, $handy)]);
+                    $runs = $this->collectRuns($handy, $runs);
+                    continue;
+                } else if (isset($nextcard) && $thiscard->getIndex() - 1 == $nextcard->getIndex()) {
+                    $candidate[] = $nextcard;
+                } else {
+                    $runs = $this->addToRuns($runs, $candidate);
+                    $candidate = array($nextcard);
+                }
+                // var_dump(['this' => $thiscard, 'next' => $nextcard, 'current' => $candidate, 'runs' => $runs]);
             }
-            array_pop($pos);
+            array_pop($hand);
         }
-        if ($streak > 2) {
-            return $streak;
+        return $runs;
+    }
+
+    private function addToRuns($runs, $candidate) {
+        if (count($candidate) < 3) {
+            return $runs;
         }
+        // var_dump(['candidate' => $candidate, 'runs' => $runs]);
+        foreach ($runs as $run) {
+            if (count(array_diff($candidate, $run)) == 0) {
+                return $runs;
+            }
+        }
+        $runs[] = $candidate;
+        return $runs;
     }
 
     public function countPairs($hand) {
@@ -229,7 +209,7 @@ class PotentialPlay {
         return $points;
     }
 
-    private function getCardFrequency($starter) {
+    public function getCardFrequency($starter) {
         $counts = array();
         foreach ($this->hand as $card) {
             $faceValue = $card->getFaceValue();
@@ -239,8 +219,8 @@ class PotentialPlay {
                 $counts[$faceValue] = 1;
             }
         }
-        if (array_key_exists($starter->getValue(), $counts)) {
-            return 4 - $counts[$starter->getValue()];
+        if (array_key_exists($starter->getFaceValue(), $counts)) {
+            return 4 - $counts[$starter->getFaceValue()];
         }
         return 4;
     }

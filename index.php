@@ -1,6 +1,8 @@
 <?php
 
 require_once('src/Deal.php');
+require_once('src/PotentialPlay.php');
+require_once('src/Card.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $deal = new Deal($_POST);
@@ -12,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!doctype html>
 <html>
 <head>
+    <title>Cribbage Discard Coach</title>
     <link rel="stylesheet" href="../cobaltandcurry/css/bootstrap.min.css" />
     <link rel="stylesheet" href="style.css" />
 </head>
@@ -27,6 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" name="card5" class="span1" value="<?= isset($_POST['card5']) ? $_POST['card5'] : 'JC' ?>" />
         <button type="submit" class="btn">Analyze</button>
     </form>
+
+    <?php
+        // $p = new PotentialPlay();
+        // echo $p->countRuns([new Card('2N'), new Card('3H'), new Card('4C'), new Card('5H'), new Card('5C')]);
+        // exit;
+    ?>
 
     <?php if (isset($deal->possible_plays)): ?>
         <table class="table table-bordered table-striped table-hover">

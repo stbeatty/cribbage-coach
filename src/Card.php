@@ -21,11 +21,12 @@ class Card {
         'K' => 10
     );
 
-    public static $SUITS = array('C', 'D', 'H', 'S');
+    public static $SUITS = array('C', 'D', 'H', 'S', 'N');
 
     private $faceValue;
     private $suit;
     private $value;
+    private $index;
 
     public function __construct($stringValue) {
         if (!is_string($stringValue)) {
@@ -50,6 +51,7 @@ class Card {
         $this->suit = $suit;
         $this->faceValue = $faceValue;
         $this->value = Card::$VALUES[$faceValue];
+        $this->index = array_search($faceValue, array_keys(Card::$VALUES));
     }
 
     public function __toString() {
@@ -66,5 +68,13 @@ class Card {
 
     public function getValue() {
         return $this->value;
+    }
+
+    public function getIndex() {
+        return $this->index;
+    }
+
+    public static function sort($a, $b) {
+        return $a->getIndex() > $b->getIndex();
     }
 }

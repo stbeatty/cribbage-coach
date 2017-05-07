@@ -4,65 +4,89 @@ use PHPUnit\Framework\TestCase;
 
 final class PotentialPlayTest extends TestCase {
 
+    public function testGetCardFrequency() {
+        $p = new PotentialPlay();
+        $p->discard([new Card('2C'), new Card('JC')])
+          ->keep([new Card('3C'), new Card('4D'), new Card('5H'), new Card('5C')]);
+
+        $this->assertEquals(4, $p->getCardFrequency(new Card('AN')));
+        $this->assertEquals(3, $p->getCardFrequency(new Card('2N')));
+        $this->assertEquals(3, $p->getCardFrequency(new Card('3N')));
+        $this->assertEquals(3, $p->getCardFrequency(new Card('4N')));
+        $this->assertEquals(2, $p->getCardFrequency(new Card('5N')));
+        $this->assertEquals(4, $p->getCardFrequency(new Card('6N')));
+        $this->assertEquals(4, $p->getCardFrequency(new Card('7N')));
+        $this->assertEquals(4, $p->getCardFrequency(new Card('8N')));
+        $this->assertEquals(4, $p->getCardFrequency(new Card('9N')));
+        $this->assertEquals(4, $p->getCardFrequency(new Card('10N')));
+        $this->assertEquals(3, $p->getCardFrequency(new Card('JN')));
+        $this->assertEquals(4, $p->getCardFrequency(new Card('QN')));
+        $this->assertEquals(4, $p->getCardFrequency(new Card('KN')));
+    }
+
     public function testCountFifteens() {
+        $this->assertMethod('countFifteens', 8, ['4D','5H','5C','JC','AN']);
+        $this->assertMethod('countFifteens', 4, ['4D','5H','5C','JC','2N']);
+        $this->assertMethod('countFifteens', 4, ['4D','5H','5C','JC','3N']);
+        $this->assertMethod('countFifteens', 4, ['4D','5H','5C','JC','4N']);
+        $this->assertMethod('countFifteens', 8, ['4D','5H','5C','JC','5N']);
 
-        $this->assertMethod('countFifteens', 8, ['4D','5H','5C','JC','AC']);
-        $this->assertMethod('countFifteens', 4, ['4D','5H','5C','JC','2C']);
-        $this->assertMethod('countFifteens', 4, ['4D','5H','5C','JC','3C']);
-        $this->assertMethod('countFifteens', 4, ['4D','5H','5C','JC','4C']);
-        $this->assertMethod('countFifteens', 8, ['4D','5H','5C','JC','5C']);
-
-        $this->assertMethod('countFifteens', 4, ['2C','3C','4D','JC','6C']);
-        $this->assertMethod('countFifteens', 2, ['2C','3C','4D','JC','7C']);
-        $this->assertMethod('countFifteens', 4, ['2C','3C','4D','JC','8C']);
-        $this->assertMethod('countFifteens', 4, ['2C','3C','4D','JC','9C']);
-        $this->assertMethod('countFifteens', 4, ['2C','3C','4D','JC','10C']);
+        $this->assertMethod('countFifteens', 4, ['2C','3C','4D','JC','6N']);
+        $this->assertMethod('countFifteens', 2, ['2C','3C','4D','JC','7N']);
+        $this->assertMethod('countFifteens', 4, ['2C','3C','4D','JC','8N']);
+        $this->assertMethod('countFifteens', 4, ['2C','3C','4D','JC','9N']);
+        $this->assertMethod('countFifteens', 4, ['2C','3C','4D','JC','10N']);
     }
 
     public function testCountPairs() {
-        $this->assertMethod('countPairs', 2, ['4D','5H','5C','JC','AC']);
-        $this->assertMethod('countPairs', 2, ['4D','5H','5C','JC','2C']);
-        $this->assertMethod('countPairs', 2, ['4D','5H','5C','JC','3C']);
-        $this->assertMethod('countPairs', 4, ['4D','5H','5C','JC','4C']);
-        $this->assertMethod('countPairs', 6, ['4D','5H','5C','JC','5C']);
+        $this->assertMethod('countPairs', 2, ['4D','5H','5C','JC','AN']);
+        $this->assertMethod('countPairs', 2, ['4D','5H','5C','JC','2N']);
+        $this->assertMethod('countPairs', 2, ['4D','5H','5C','JC','3N']);
+        $this->assertMethod('countPairs', 4, ['4D','5H','5C','JC','4N']);
+        $this->assertMethod('countPairs', 6, ['4D','5H','5C','JC','5N']);
 
-        $this->assertMethod('countPairs', 0, ['2C','3C','4D','JC','6C']);
-        $this->assertMethod('countPairs', 0, ['2C','3C','4D','JC','7C']);
-        $this->assertMethod('countPairs', 0, ['2C','3C','4D','JC','8C']);
-        $this->assertMethod('countPairs', 0, ['2C','3C','4D','JC','9C']);
-        $this->assertMethod('countPairs', 0, ['2C','3C','4D','JC','10C']);
+        $this->assertMethod('countPairs', 0, ['2C','3C','4D','JC','6N']);
+        $this->assertMethod('countPairs', 0, ['2C','3C','4D','JC','7N']);
+        $this->assertMethod('countPairs', 0, ['2C','3C','4D','JC','8N']);
+        $this->assertMethod('countPairs', 0, ['2C','3C','4D','JC','9N']);
+        $this->assertMethod('countPairs', 0, ['2C','3C','4D','JC','10N']);
     }
 
     public function testCountRuns() {
-        $this->assertMethod('countRuns', 0, ['4D','5H','5C','JC','AC']);
-        $this->assertMethod('countRuns', 0, ['4D','5H','5C','JC','2C']);
-        $this->assertMethod('countRuns', 6, ['4D','5H','5C','JC','3C']);
-        $this->assertMethod('countRuns', 0, ['4D','5H','5C','JC','4C']);
-        $this->assertMethod('countRuns', 0, ['4D','5H','5C','JC','5C']);
+        $this->assertMethod('countRuns', 0, ['4D','5H','5C','JC','AN']);
+        $this->assertMethod('countRuns', 0, ['4D','5H','5C','JC','2N']);
+        $this->assertMethod('countRuns', 6, ['4D','5H','5C','JC','3N']);
+        $this->assertMethod('countRuns', 0, ['4D','5H','5C','JC','4N']);
+        $this->assertMethod('countRuns', 0, ['4D','5H','5C','JC','5N']);
 
-        $this->assertMethod('countRuns', 4, ['2C','3C','4D','JC','AC']);
-        $this->assertMethod('countRuns', 6, ['2C','3C','4D','JC','2C']);
-        $this->assertMethod('countRuns', 6, ['2C','3C','4D','JC','3C']);
-        $this->assertMethod('countRuns', 6, ['2C','3C','4D','JC','4C']);
-        $this->assertMethod('countRuns', 4, ['2C','3C','4D','JC','5C']);
-        $this->assertMethod('countRuns', 3, ['2C','3C','4D','JC','6C']);
-        $this->assertMethod('countRuns', 3, ['2C','3C','4D','JC','7C']);
-        $this->assertMethod('countRuns', 3, ['2C','3C','4D','JC','8C']);
-        $this->assertMethod('countRuns', 3, ['2C','3C','4D','JC','9C']);
-        $this->assertMethod('countRuns', 3, ['2C','3C','4D','JC','10C']);
+        $this->assertMethod('countRuns', 4, ['2C','3C','4D','JC','AN']);
+        $this->assertMethod('countRuns', 6, ['2C','3C','4D','JC','2N']);
+        $this->assertMethod('countRuns', 6, ['2C','3C','4D','JC','3N']);
+        $this->assertMethod('countRuns', 6, ['2C','3C','4D','JC','4N']);
+        $this->assertMethod('countRuns', 4, ['2C','3C','4D','JC','5N']);
+        $this->assertMethod('countRuns', 3, ['2C','3C','4D','JC','6N']);
+        $this->assertMethod('countRuns', 3, ['2C','3C','4D','JC','7N']);
+        $this->assertMethod('countRuns', 3, ['2C','3C','4D','JC','8N']);
+        $this->assertMethod('countRuns', 3, ['2C','3C','4D','JC','9N']);
+        $this->assertMethod('countRuns', 3, ['2C','3C','4D','JC','10N']);
+        $this->assertMethod('countRuns', 8, ['3C','4C','5H','5C','2N']);
+        $this->assertMethod('countRuns', 6, ['3C','4D','5H','5C','JN']);
     }
 
     public function testCalculateAverageHand() {
         $p = new PotentialPlay();
-        $p->discard(['JC','2C'])->keep(['3C','4D','5H','5C']);
-        $this->assertEquals(16.32, $p->calculateAverageHand());
+        $p->discard([new Card('JC'), new Card('2C')])
+          ->keep([new Card('3C'), new Card('4D'), new Card('5H'), new Card('5C')]);
+        $this->assertEquals(16.32, $p->getExpectedAverageSelf());
 
         $p = new PotentialPlay();
-        $p->discard(['5H','5C'])->keep(['2C','3C','4D','JC']);
-        $this->assertEquals(16.92, $p->calculateAverageHand());
+        $p->discard([new Card('5H'), new Card('5C')])
+          ->keep([new Card('2C'), new Card('3C'), new Card('4D'), new Card('JC')]);
+        $this->assertEquals(16.92, $p->getExpectedAverageSelf());
 
         $p = new PotentialPlay();
-        $p->discard(['4D','5H'])->keep(['2C','3C','5C','JC']);
+        $p->discard([ new Card('4D'), new Card('5H')])
+          ->keep([new Card('2C'), new Card('3C'), new Card('5C'), new Card('JC')]);
         $this->assertEquals(17.96, $p->calculateAverageHand());
     }
 
