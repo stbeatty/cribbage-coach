@@ -56,11 +56,11 @@ class PotentialPlay {
     }
 
     public function getDiscards() {
-        return join(", ", $this->discards);
+        return $this->discards;
     }
 
     public function getHolds() {
-        return join(", ", $this->holds);
+        return $this->holds;
     }
 
     public function getExpectedAverageSelf() {

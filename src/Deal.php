@@ -23,7 +23,7 @@ class Deal {
             if (!array_key_exists($key, $params)) {
                 throw new Exception("Not enough cards dealt. Currently at [$key].");
             }
-            $card = $params["card$i"];
+            $card = strtoupper($params["card$i"]);
             $this->hand[] = new Card($card);
         }
         $this->dealer = $params['dealer'];

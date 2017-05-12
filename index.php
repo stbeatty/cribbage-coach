@@ -4,14 +4,32 @@ require_once('src/Deal.php');
 require_once('src/PotentialPlay.php');
 require_once('src/Card.php');
 
+$dealer = 'self';
 $showDetail = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $deal = new Deal($_POST);
     $deal->determinePossiblePlays();
 
-    $showDetail = $_POST['showDetail'];
     $dealer = $_POST['dealer'];
+    $showDetail = $_POST['showDetail'];
+}
+
+function getHtmlSuit($suit) {
+    $suits = [
+        'C' => '&clubs;',
+        'D' => '&diams;',
+        'H' => '&hearts;',
+        'S' => '&spades;',
+        'N' => ''
+    ];
+    return $suits[$suit];
+}
+
+function getSuitColor($suit) {
+    if (in_array($suit, ['D', 'H'])) {
+        return 'red';
+    }
 }
 
 ?>
@@ -30,12 +48,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="control-group">
             <label class="control-label" for="card">Dealt Cards</label>
             <div class="controls">
-                <input type="text" name="card0" class="span1" value="<?= isset($_POST['card0']) ? $_POST['card0'] : '2C' ?>" />
-                <input type="text" name="card1" class="span1" value="<?= isset($_POST['card1']) ? $_POST['card1'] : '3C' ?>" />
-                <input type="text" name="card2" class="span1" value="<?= isset($_POST['card2']) ? $_POST['card2'] : '4D' ?>" />
-                <input type="text" name="card3" class="span1" value="<?= isset($_POST['card3']) ? $_POST['card3'] : '5H' ?>" />
-                <input type="text" name="card4" class="span1" value="<?= isset($_POST['card4']) ? $_POST['card4'] : '5C' ?>" />
-                <input type="text" name="card5" class="span1" value="<?= isset($_POST['card5']) ? $_POST['card5'] : 'JC' ?>" />
+                <input type="text" name="card0" class="span1" value="<?= isset($_POST['card0']) ? $_POST['card0'] : '' ?>" />
+                <input type="text" name="card1" class="span1" value="<?= isset($_POST['card1']) ? $_POST['card1'] : '' ?>" />
+                <input type="text" name="card2" class="span1" value="<?= isset($_POST['card2']) ? $_POST['card2'] : '' ?>" />
+                <input type="text" name="card3" class="span1" value="<?= isset($_POST['card3']) ? $_POST['card3'] : '' ?>" />
+                <input type="text" name="card4" class="span1" value="<?= isset($_POST['card4']) ? $_POST['card4'] : '' ?>" />
+                <input type="text" name="card5" class="span1" value="<?= isset($_POST['card5']) ? $_POST['card5'] : '' ?>" />
                 <span class="help-block">Type card and suit. Examples: 5H, 10C, AS, JH</span>
             </div>
         </div>
@@ -77,8 +95,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <tbody>
                 <?php foreach($deal->possible_plays as $play): ?>
                     <tr>
-                        <td><?= $play->getHolds() ?></td>
-                        <td><?= $play->getDiscards() ?></td>
+                        <td>
+                            <?php foreach ($play->getHolds() as $card): ?>
+                            <div class="card <?= getSuitColor($card->getSuit()) ?>">
+                                <div class="top"><div><?= $card->getFaceValue() ?></div></div>
+                                <h1><?= getHtmlSuit($card->getSuit()) ?></h1>
+                                <div class="bottom"><div><?= $card->getFaceValue() ?></div></div>
+                            </div>
+                            <?php endforeach; ?>
+                        </td>
+                        <td>
+                            <?php foreach ($play->getDiscards() as $card): ?>
+                            <div class="card <?= getSuitColor($card->getSuit()) ?>">
+                                <div class="top"><div><?= $card->getFaceValue() ?></div></div>
+                                <h1><?= getHtmlSuit($card->getSuit()) ?></h1>
+                                <div class="bottom"><div><?= $card->getFaceValue() ?></div></div>
+                            </div>
+                            <?php endforeach; ?>
+                        </td>
                         <?php if ($showDetail): ?>
                         <td>
                             <table class="table table-bordered table-striped table-condensed">
@@ -88,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <th>fifteens</th>
                                         <th>pairs</th>
                                         <th>runs</th>
-                                        <th>frequency</th>
+                                        <th>freq.</th>
                                         <th>total</th>
                                     </tr>
                                 </thead>

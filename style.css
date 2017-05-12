@@ -1,3 +1,30 @@
 input {
     text-align: center;
 }
+
+.card{
+    display: inline-block;
+    width: 33px;
+    border: 0px solid black;
+    text-align: center;
+    padding: 6px;
+    margin: 0px;
+    background: #FFF;
+    font-size: 18px;
+    box-shadow: 1px 1px 3px #000;
+    -moz-box-shadow: 1px 1px 3px #000;
+    -webkit-box-shadow: 1px 1px 3px #000;
+    border-radius:10px;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+}
+.card.red {
+    color: red;
+}
+.card h1 {
+    font-size: 18px;
+    line-height: 0;
+}
+.card .top{ text-align: left; }
+.card .bottom{ text-align: right; }
+ 
