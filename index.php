@@ -4,9 +4,13 @@ require_once('src/Deal.php');
 require_once('src/PotentialPlay.php');
 require_once('src/Card.php');
 
+$showDetail = false;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $deal = new Deal($_POST);
     $deal->determinePossiblePlays();
+
+    $showDetail = $_POST['showDetail'];
 }
 
 ?>
@@ -20,22 +24,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <div class="container">
-    <h1>Enter card values</h1>
-    <form method="post" class="form-inline">
-        <input type="text" name="card0" class="span1" value="<?= isset($_POST['card0']) ? $_POST['card0'] : '2C' ?>" />
-        <input type="text" name="card1" class="span1" value="<?= isset($_POST['card1']) ? $_POST['card1'] : '3C' ?>" />
-        <input type="text" name="card2" class="span1" value="<?= isset($_POST['card2']) ? $_POST['card2'] : '4D' ?>" />
-        <input type="text" name="card3" class="span1" value="<?= isset($_POST['card3']) ? $_POST['card3'] : '5H' ?>" />
-        <input type="text" name="card4" class="span1" value="<?= isset($_POST['card4']) ? $_POST['card4'] : '5C' ?>" />
-        <input type="text" name="card5" class="span1" value="<?= isset($_POST['card5']) ? $_POST['card5'] : 'JC' ?>" />
-        <button type="submit" class="btn">Analyze</button>
+    <h1>Cribbage Discard Coach</h1>
+    <form method="post" class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label" for="card">Dealt Cards</label>
+            <div class="controls">
+                <input type="text" name="card0" class="span1" value="<?= isset($_POST['card0']) ? $_POST['card0'] : '2C' ?>" />
+                <input type="text" name="card1" class="span1" value="<?= isset($_POST['card1']) ? $_POST['card1'] : '3C' ?>" />
+                <input type="text" name="card2" class="span1" value="<?= isset($_POST['card2']) ? $_POST['card2'] : '4D' ?>" />
+                <input type="text" name="card3" class="span1" value="<?= isset($_POST['card3']) ? $_POST['card3'] : '5H' ?>" />
+                <input type="text" name="card4" class="span1" value="<?= isset($_POST['card4']) ? $_POST['card4'] : '5C' ?>" />
+                <input type="text" name="card5" class="span1" value="<?= isset($_POST['card5']) ? $_POST['card5'] : 'JC' ?>" />
+                <span class="help-block">Type card and suit. Examples: 5H, 10C, AS, JH</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="crib">Crib</label>
+            <div class="controls">
+                <label class="radio">
+                    <input type="radio" name="crib" value="self" checked>
+                    My crib
+                </label>
+                <label class="radio">
+                    <input type="radio" name="crib" value="pone">
+                    Pone's crib
+                </label>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="hidden" name="showDetail" value="0" />
+                    <input type="checkbox" name="showDetail" <?= $showDetail ? 'checked="checked"' : '' ?> />
+                    Show detailed hand information
+                </label>
+                <button type="submit" class="btn btn-success">Help Me</button>
+            </div>
+        </div>
     </form>
-
-    <?php
-        // $p = new PotentialPlay();
-        // echo $p->countRuns([new Card('2N'), new Card('3H'), new Card('4C'), new Card('5H'), new Card('5C')]);
-        // exit;
-    ?>
 
     <?php if (isset($deal->possible_plays)): ?>
         <table class="table table-bordered table-striped table-hover">
@@ -43,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <tr>
                     <th>Hold</th>
                     <th>Discard</th>
-                    <?php if (0): ?><th>Hands</th><?php endif; ?>
+                    <?php if ($showDetail): ?><th>Hands</th><?php endif; ?>
                     <th>Average Hand (Self)</th>
                     <th>Average Hand (Opponent)</th>
                 </tr>
@@ -53,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <tr>
                         <td><?= $play->getHolds() ?></td>
                         <td><?= $play->getDiscards() ?></td>
-                        <?php if (0): ?>
+                        <?php if ($showDetail): ?>
                         <td>
                             <table class="table table-bordered table-striped table-condensed">
                                 <thead>
