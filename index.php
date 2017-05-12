@@ -70,8 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <th>Hold</th>
                     <th>Discard</th>
                     <?php if ($showDetail): ?><th>Hands</th><?php endif; ?>
-                    <th>Average Hand (Self)</th>
-                    <th>Average Hand (Opponent)</th>
+                    <th>Expected Average (Self)</th>
+                    <th>Expected Average (Opponent)</th>
                 </tr>
             </thead>
             <tbody>
