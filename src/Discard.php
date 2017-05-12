@@ -15,13 +15,14 @@ class Discard {
         }
 
         foreach (Discard::$VALUES as $values) {
+            $discards = array($values[0], $values[1]);
             foreach ($cards as $card) {
-                $pos = array_search($card->getFaceValue(), $values);
+                $pos = array_search($card->getFaceValue(), $discards);
                 if ($pos !== false) {
-                    unset($values[$pos]);
+                    unset($discards[$pos]);
                 }
             }
-            if (count($values) == 2) {
+            if (count($discards) == 0) {
                 $this->averageCribSelf = $values[2];
                 $this->averageCribOpponent = $values[3];
                 return $this;
@@ -31,7 +32,7 @@ class Discard {
     }
 
     // Card 1, Card 2, Value self, Value opponent
-    public static $VALUES = array(
+    private static $VALUES = array(
         array('A', 'A', 5.38, 6.02),
         array('A', 2, 4.23, 5.07),
         array('A', 3, 4.52, 5.07),
