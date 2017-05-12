@@ -12,19 +12,21 @@ class Deal {
     public static $total_num_cards = 6;
     public $hand = array(); // Array of Card objects
     public $possible_plays = array(); // Array of PossiblePlay objects
+    private $dealer;
 
-    public function __construct($cards) {
-        if (!is_array($cards)) {
+    public function __construct($params) {
+        if (!is_array($params)) {
             throw new InvalidArgumentException("Cards supplied are not an array.");
         }
         for ($i=0; $i < Deal::$total_num_cards; $i++) {
             $key = "card$i";
-            if (!array_key_exists($key, $cards)) {
+            if (!array_key_exists($key, $params)) {
                 throw new Exception("Not enough cards dealt. Currently at [$key].");
             }
-            $card = $cards["card$i"];
+            $card = $params["card$i"];
             $this->hand[] = new Card($card);
         }
+        $this->dealer = $params['dealer'];
     }
 
     public function determinePossiblePlays() {
@@ -41,14 +43,21 @@ class Deal {
                 $play->discard(array($discard_one, $discard_two));
                 $play->keep($remaining_hand);
                 $this->possible_plays[] = $play;
-                //var_dump($play->getHandValue());
             }
         }
-        usort($this->possible_plays, array($this, 'sortPlaysByExpectedAverage'));
+        if ("self" == $this->dealer) {
+            usort($this->possible_plays, array($this, 'sortPlaysByExpectedAverageSelf'));
+        } else if ("opponent" == $this->dealer) {
+            usort($this->possible_plays, array($this, 'sortPlaysByExpectedAverageOpponent'));
+        }
     }
 
-    private function sortPlaysByExpectedAverage($a, $b) {
+    private function sortPlaysByExpectedAverageSelf($a, $b) {
         return $a->getExpectedAverageSelf() < $b->getExpectedAverageSelf();
+    }
+
+    private function sortPlaysByExpectedAverageOpponent($a, $b) {
+        return $a->getExpectedAverageOpponent() < $b->getExpectedAverageOpponent();
     }
 
 }

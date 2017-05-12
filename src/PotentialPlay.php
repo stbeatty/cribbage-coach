@@ -82,7 +82,7 @@ class PotentialPlay {
             $this->setAverageHand();
             $this->lookupAverageCribs();
             $this->expectedAverageSelf = $this->averageHand + $this->discard->averageCribSelf;
-            $this->expectedAverageOpponent = $this->averageHand + $this->discard->averageCribOpponent;
+            $this->expectedAverageOpponent = $this->averageHand - $this->discard->averageCribOpponent;
         }
     }
 

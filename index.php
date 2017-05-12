@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $deal->determinePossiblePlays();
 
     $showDetail = $_POST['showDetail'];
+    $dealer = $_POST['dealer'];
 }
 
 ?>
@@ -39,15 +40,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label" for="crib">Crib</label>
             <div class="controls">
                 <label class="radio">
-                    <input type="radio" name="crib" value="self" checked>
+                    <input type="radio" name="dealer" value="self" <?= $dealer == 'self' ? 'checked="checked"' : '' ?> />
                     My crib
                 </label>
                 <label class="radio">
-                    <input type="radio" name="crib" value="pone">
-                    Pone's crib
+                    <input type="radio" name="dealer" value="opponent" <?= $dealer == 'opponent' ? 'checked="checked"' : '' ?> />
+                    Opponent's crib
                 </label>
             </div>
         </div>

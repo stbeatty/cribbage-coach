@@ -73,7 +73,7 @@ final class PotentialPlayTest extends TestCase {
         $this->assertMethod('countRuns', 6, ['3C','4D','5H','5C','JN']);
     }
 
-    public function testCalculateAverageHand() {
+    public function testCalculateAverageHandSelf() {
         $p = new PotentialPlay();
         $p->discard([new Card('JC'), new Card('2C')])
           ->keep([new Card('3C'), new Card('4D'), new Card('5H'), new Card('5C')]);
@@ -88,6 +88,28 @@ final class PotentialPlayTest extends TestCase {
         $p->discard([ new Card('4D'), new Card('5H')])
           ->keep([new Card('2C'), new Card('3C'), new Card('5C'), new Card('JC')]);
         $this->assertEquals(17.96, $p->getExpectedAverageSelf());
+    }
+
+    public function testCalculateAverageHandOpponent() {
+        $p = new PotentialPlay();
+        $p->discard([ new Card('9H'), new Card('JC')])
+          ->keep([new Card('4H'), new Card('5H'), new Card('6S'), new Card('7H')]);
+        $this->assertEquals(4.61, $p->getExpectedAverageOpponent());
+
+        $p = new PotentialPlay();
+        $p->discard([ new Card('7H'), new Card('JC')])
+          ->keep([new Card('4H'), new Card('5H'), new Card('6S'), new Card('9H')]);
+        $this->assertEquals(5.23, $p->getExpectedAverageOpponent());
+
+        $p = new PotentialPlay();
+        $p->discard([ new Card('7H'), new Card('9H')])
+          ->keep([new Card('4H'), new Card('5H'), new Card('6S'), new Card('JC')]);
+        $this->assertEquals(4.74, $p->getExpectedAverageOpponent());
+
+        $p = new PotentialPlay();
+        $p->discard([ new Card('6S'), new Card('JC')])
+          ->keep([new Card('4H'), new Card('5H'), new Card('7H'), new Card('9H')]);
+        $this->assertEquals(2.67, $p->getExpectedAverageOpponent());
     }
 
     private function assertMethod($method, $expectedValue, $cards) {

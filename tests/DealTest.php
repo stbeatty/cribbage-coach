@@ -11,7 +11,8 @@ final class DealTest extends TestCase {
             'card2' => '4D',
             'card3' => '5H',
             'card4' => '5C',
-            'card5' => 'JC'
+            'card5' => 'JC',
+            'dealer' => 'self'
         ]);
         $this->assertEquals(Deal::$total_num_cards, count($d->hand));
     }
