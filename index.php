@@ -38,15 +38,16 @@ function getSuitColor($suit) {
 <html>
 <head>
     <title>Cribbage Discard Coach</title>
-    <link rel="stylesheet" href="../cobaltandcurry/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="assets/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
 <div class="container">
     <h1>Cribbage Discard Coach</h1>
+    <p>Use this tool to help you decide which cards you should discard. For an in-depth explanation and methodology, see Michael Schell's explanation on <a href="http://cribbageforum.com/SchellDiscard.htm" target="_blank">cribbageforum.com</a>.</p>
     <form method="post" class="form-horizontal">
         <div class="control-group">
-            <label class="control-label" for="card">Dealt Cards</label>
+            <span class="control-label">Dealt Cards</span>
             <div class="controls">
                 <input type="text" name="card0" class="span1" value="<?= isset($_POST['card0']) ? $_POST['card0'] : '' ?>" maxlength="3" />
                 <input type="text" name="card1" class="span1" value="<?= isset($_POST['card1']) ? $_POST['card1'] : '' ?>" maxlength="3" />

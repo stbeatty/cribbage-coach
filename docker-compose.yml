@@ -1,0 +1,13 @@
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "9999:9999"
+    volumes:
+      - ./assets:/var/www/html/assets
+      - ./src:/var/www/html/src
+      - ./tests:/var/www/html/tests
+      - ./index.php:/var/www/html/index.php
+      - ./composer.json:/var/www/html/composer.json
+    command: php -S 0.0.0.0:9999

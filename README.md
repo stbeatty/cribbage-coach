@@ -1,21 +1,17 @@
-# Cribbage Coach #
+# Cribbage Coach
 
-* A web application to help decide which cards to discard during cribbage play.
-* Version 0.0.1
+A web application to help decide which cards to discard during cribbage play. Based on [Michael Schell's discard tables.](http://cribbageforum.com/SchellDiscard.htm)
 
-### Setup ###
+### Requirements
 
-* Must have web server setup such as WAMP or LAMP with >= PHP 7.x
-* Put the project files in your www root folder
+- [Docker](https://docs.docker.com/get-docker/)
+- Or [PHP 7.x](https://www.php.net/) and [Composer](https://getcomposer.org/download/)
 
-### How to Use ###
+### How to Use
 
-* Open a browser and navigate to the project root
+- Run Docker container `docker compose up`
+- Navigate to [localhost:9999](http://localhost:9999)
 
-### Running Tests ###
+### Running Tests
 
-* Run `vendor/bin/phpunit` from the project root
-
-### Contact ###
-
-* sean@beattywebs.com
+- Run `docker compose run app vendor/bin/phpunit tests` from the project root
